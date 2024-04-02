@@ -1,12 +1,18 @@
+# Build go
+FROM golang:1.22.0-alpine AS builder
+WORKDIR /app
+COPY . .
+ENV CGO_ENABLED=0
+RUN go mod download
+RUN go build -v -o XrayR -trimpath -ldflags "-s -w -buildid="
+
 # Release
-FROM alpine
+FROM  alpine
 # 安装必要的工具包
-RUN apk --no-cache add tzdata ca-certificates 
-    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
+RUN  apk --update --no-cache add tzdata ca-certificates \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir /etc/XrayR/
-
-COPY --from=builder /app/XrayR /usr/local/bin/XrayR
-
+COPY --from=builder /app/XrayR /usr/local/bin
 RUN set -eux; 
     LIST=('geoip' 'geosite'); 
     for item in "${LIST[@]}"; do 
@@ -16,4 +22,4 @@ RUN set -eux;
       wget "${DOWNLOAD_URL}" -O "${FILE_NAME}"; 
     done
 
-ENTRYPOINT ["/usr/local/bin/XrayR", "--config", "/etc/XrayR/config.yml"]
+ENTRYPOINT [ "XrayR", "--config", "/etc/XrayR/config.yml"]
