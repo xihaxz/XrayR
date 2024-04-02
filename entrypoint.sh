@@ -16,12 +16,12 @@ fi
 XRAYR_PANEL_TYPE=${XRAYR_PANEL_TYPE:-NewV2board}
 XRAYR_NODE_TYPE=${XRAYR_NODE_TYPE:-V2ray}
 
-cat > /xrayr.yml <<EOF
+cat > /etc/XrayR/xrayr.yml <<EOF
 Log:
   Level: none                              # 日志级别：none, error, warning, info, debug
   AccessPath:                              # 访问日志路径：/etc/XrayR/access.Log
   ErrorPath:                               # 错误日志路径：/etc/XrayR/error.log
-DnsConfigPath:                             # DNS配置路径：/etc/XrayR/dns.json    # DNS配置的路径，请参考 https://xtls.github.io/config/dns.html 获取帮助
+DnsConfigPath: /etc/XrayR/dns.json         # DNS配置路径：/etc/XrayR/dns.json    # DNS配置的路径，请参考 https://xtls.github.io/config/dns.html 获取帮助
 RouteConfigPath:                           # 路由配置路径：/etc/XrayR/route.json  # 路由配置的路径，请参考 https://xtls.github.io/config/routing.html 获取帮助
 InboundConfigPath:                         # 自定义入站配置路径：/etc/XrayR/custom_inbound.json  # 自定义入站配置的路径，请参考 https://xtls.github.io/config/inbound.html 获取帮助
 OutboundConfigPath:                        # 自定义出站配置路径：/etc/XrayR/custom_outbound.json  # 自定义出站配置的路径，请参考 https://xtls.github.io/config/outbound.html 获取帮助
@@ -39,8 +39,8 @@ Nodes:
       NodeID: $XRAYR_NODE_ID
       NodeType: $XRAYR_NODE_TYPE           # 节点类型：V2ray, Trojan, Shadowsocks, Shadowsocks-Plugin
       Timeout: 8                           # API请求超时时间
-      EnableVless: true                    # 是否启用Vless（仅适用于V2ray类型）
-      EnableXTLS: true                     # 是否启用XTLS（适用于V2ray和Trojan类型）
+      EnableVless: false                    # 是否启用Vless（仅适用于V2ray类型）
+      EnableXTLS: false                     # 是否启用XTLS（适用于V2ray和Trojan类型）
       VlessFlow: "xtls-rprx-vision"        # Only support vless
       SpeedLimit: 0                        # 速度限制（Mbps），本地设置将覆盖远程设置，设置为0表示禁用
       DeviceLimit: 0                       # 设备限制，本地设置将覆盖远程设置，设置为0表示禁用
@@ -49,8 +49,8 @@ Nodes:
       ListenIP: 0.0.0.0                    # 监听的IP地址
       SendIP: 0.0.0.0                      # 发送数据包的IP地址
       UpdatePeriodic: 8                    # 更新节点信息的时间间隔，单位：秒
-      EnableDNS: false                     # 是否使用自定义DNS配置，请确保正确设置dns.json
-      DNSType: AsIs                        # DNS策略：AsIs, UseIP, UseIPv4, UseIPv6
+      EnableDNS: true                     # 是否使用自定义DNS配置，请确保正确设置dns.json
+      DNSType: UseIPv4                        # DNS策略：AsIs, UseIP, UseIPv4, UseIPv6
       DisableUploadTraffic: false          # 禁用上传流量到面板
       DisableGetRule: false                # 禁用从面板获取规则
       DisableIVCheck: false                # 禁用Shadowsocks的反回复保护
@@ -75,10 +75,10 @@ Nodes:
           Path:                            # HTTP路径，留空表示任意
           Dest: 80                         # 必填，备用服务器的目标，详细信息请参考 https://xtls.github.io/config/fallback/
           ProxyProtocolVer: 0              # 发送的PROXY协议版本，设置为0表示禁用
-      EnableREALITY: true                  # Enable REALITY
-      DisableLocalREALITYConfig: true      # disable local reality config
+      EnableREALITY: false                  # Enable REALITY
+      DisableLocalREALITYConfig: false      # disable local reality config
       REALITYConfigs:
-        Show: true                         # Show REALITY debug
+        Show: false                         # Show REALITY debug
       CertConfig:
         CertMode: ${CERT_MODE}
         CertDomain: ${ACME_DOMAIN}
@@ -86,4 +86,4 @@ Nodes:
         KeyFile: /root/.acme.sh/${ACME_DOMAIN}_ecc/${ACME_DOMAIN}.key
 EOF
 
-while true; do XrayR --config /xrayr.yml; sleep 5; done
+while true; do XrayR --config /etc/XrayR/xrayr.yml; sleep 5; done
