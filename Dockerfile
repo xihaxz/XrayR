@@ -18,7 +18,7 @@ RUN apk --update --no-cache add curl tzdata ca-certificates \
     && curl -L "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat" -o /etc/XrayR/geosite.dat \
     && git clone --depth 1 https://github.com/acmesh-official/acme.sh.git acme \
     && cd /acme && ./acme.sh --install --nocron --accountemail $ACME_EMAIL && rm -rf acme \
-    && chmod +x /app/acme.sh
+    && chmod +x /app/acme.sh \
     && chmod +x /app/entrypoint.sh
     
 # ENTRYPOINT [ "XrayR", "--config", "/etc/XrayR/config.yml"]
