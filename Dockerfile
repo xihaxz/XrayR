@@ -13,13 +13,13 @@ RUN  apk --update --no-cache add tzdata ca-certificates \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir /etc/XrayR/
 COPY --from=builder /app/XrayR /usr/local/bin
-RUN set -eux; 
-    LIST=('geoip' 'geosite'); 
-    for item in "${LIST[@]}"; do 
-      DOWNLOAD_URL="https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/${item}.dat"; 
-      FILE_NAME="/etc/XrayR/${item}.dat"; 
-      echo "Downloading ${DOWNLOAD_URL}..."; 
-      wget "${DOWNLOAD_URL}" -O "${FILE_NAME}"; 
+RUN set -eux; \
+    LIST=('geoip' 'geosite'); \
+    for item in "${LIST[@]}"; do \
+      DOWNLOAD_URL="https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/${item}.dat"; \
+      FILE_NAME="/etc/XrayR/${item}.dat"; \
+      echo "Downloading ${DOWNLOAD_URL}..."; \
+      wget "${DOWNLOAD_URL}" -O "${FILE_NAME}"; \
     done
 
 ENTRYPOINT [ "XrayR", "--config", "/etc/XrayR/config.yml"]
