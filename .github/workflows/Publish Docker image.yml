@@ -39,7 +39,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ env.REPO_NAME }}:${{ steps.get_version.outputs.version }}
-            ${{ env.REPO_NAME }}:latest
+            hellow6:${{ steps.get_version.outputs.version }}
+            hellow6:latest
             ghcr.io/${{ env.REPO_NAME }}:${{ steps.get_version.outputs.version }}
             ghcr.io/${{ env.REPO_NAME }}:latest
