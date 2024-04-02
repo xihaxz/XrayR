@@ -11,7 +11,7 @@ FROM  alpine:latest
 COPY --from=builder /app/XrayR /usr/local/bin
 COPY *.sh /app/
 # 安装必要的工具包
-RUN apk --update --no-cache add curl tzdata ca-certificates \
+RUN apk --update --no-cache add git curl tzdata ca-certificates \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir /etc/XrayR/ \
     && curl -L "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geoip.dat" -o /etc/XrayR/geoip.dat \
