@@ -41,5 +41,5 @@ jobs:
           tags: |
             hellow6:${{ steps.get_version.outputs.version }}
             hellow6:latest
-            ghcr.io/${{ env.REPO_NAME }}:${{ steps.get_version.outputs.version }}
-            ghcr.io/${{ env.REPO_NAME }}:latest
+            # ghcr.io/${{ env.REPO_NAME }}:${{ steps.get_version.outputs.version }}
+            # ghcr.io/${{ env.REPO_NAME }}:latest
