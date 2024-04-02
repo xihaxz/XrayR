@@ -13,5 +13,6 @@ RUN  apk --update --no-cache add tzdata ca-certificates \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir /etc/XrayR/
 COPY --from=builder /app/XrayR /usr/local/bin
+COPY release/config/ /etc/XrayR/
 
 ENTRYPOINT [ "XrayR", "--config", "/etc/XrayR/config.yml"]
