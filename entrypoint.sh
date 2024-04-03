@@ -15,6 +15,8 @@ fi
 
 XRAYR_PANEL_TYPE=${XRAYR_PANEL_TYPE:-NewV2board}
 XRAYR_NODE_TYPE=${XRAYR_NODE_TYPE:-V2ray}
+Enable_DNS=${Enable_DNS:-false}
+DNS_Type=${DNS_Type:-AsIs}
 
 cat > /etc/XrayR/xrayr.yml <<EOF
 Log:
@@ -49,8 +51,8 @@ Nodes:
       ListenIP: 0.0.0.0                    # 监听的IP地址
       SendIP: 0.0.0.0                      # 发送数据包的IP地址
       UpdatePeriodic: 8                    # 更新节点信息的时间间隔，单位：秒
-      EnableDNS: true                     # 是否使用自定义DNS配置，请确保正确设置dns.json
-      DNSType: UseIPv4                        # DNS策略：AsIs, UseIP, UseIPv4, UseIPv6
+      EnableDNS: $Enable_DNS               # 是否使用自定义DNS配置，请确保正确设置dns.json
+      DNSType: $DNS_Type                   # DNS策略：AsIs, UseIP, UseIPv4, UseIPv6
       DisableUploadTraffic: false          # 禁用上传流量到面板
       DisableGetRule: false                # 禁用从面板获取规则
       DisableIVCheck: false                # 禁用Shadowsocks的反回复保护
