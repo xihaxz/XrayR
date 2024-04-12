@@ -13,20 +13,49 @@ if [ -n "$ACME_DOMAIN" ]; then
   CERT_MODE=file
 fi
 
+# XrayR DNS配置文件路径检测
+DNS_Config_Path="/etc/XrayR/dns.json"
+if [ -f "$DNS_Config_Path" ]; then
+    DNS_Config="/etc/XrayR/dns.json"
+fi
+
+# XrayR Route配置文件路径检测
+Route_Config_Path="/etc/XrayR/route.json"
+if [ -f "$Route_Config_Path" ]; then
+    Route_Config="/etc/XrayR/route.json"
+fi
+
+# XrayR Inbound配置文件路径检测
+Inbound_Config_Path="/etc/XrayR/custom_inbound.json"
+if [ -f "$Inbound_Config_Path" ]; then
+    Inbound_Config="/etc/XrayR/custom_inbound.json"
+fi
+
+# XrayR Outbound配置文件路径检测
+Outbound_Config_Path="/etc/XrayR/custom_outbound.json"
+if [ -f "$Outbound_Config_Path" ]; then
+    Outbound_Config="/etc/XrayR/custom_outbound.json"
+fi
+
+# 变量默认赋值
 XRAYR_PANEL_TYPE=${XRAYR_PANEL_TYPE:-NewV2board}
 XRAYR_NODE_TYPE=${XRAYR_NODE_TYPE:-V2ray}
 Enable_DNS=${Enable_DNS:-false}
 DNS_Type=${DNS_Type:-AsIs}
+EnableVless=${EnableVless:-false}
+EnableXTLS=${EnableXTLS:-false}
+EnableREALITY=${EnableREALITY:-false}
+
 
 cat > /etc/XrayR/xrayr.yml <<EOF
 Log:
   Level: none                              # 日志级别：none, error, warning, info, debug
   AccessPath:                              # 访问日志路径：/etc/XrayR/access.Log
   ErrorPath:                               # 错误日志路径：/etc/XrayR/error.log
-DnsConfigPath: /etc/XrayR/dns.json         # DNS配置路径：/etc/XrayR/dns.json    # DNS配置的路径，请参考 https://xtls.github.io/config/dns.html 获取帮助
-RouteConfigPath:                           # 路由配置路径：/etc/XrayR/route.json  # 路由配置的路径，请参考 https://xtls.github.io/config/routing.html 获取帮助
-InboundConfigPath:                         # 自定义入站配置路径：/etc/XrayR/custom_inbound.json  # 自定义入站配置的路径，请参考 https://xtls.github.io/config/inbound.html 获取帮助
-OutboundConfigPath:                        # 自定义出站配置路径：/etc/XrayR/custom_outbound.json  # 自定义出站配置的路径，请参考 https://xtls.github.io/config/outbound.html 获取帮助
+DnsConfigPath: $DNS_Config                 # DNS配置路径：/etc/XrayR/dns.json    # DNS配置的路径，请参考 https://xtls.github.io/config/dns.html 获取帮助
+RouteConfigPath: $Route_Config             # 路由配置路径：/etc/XrayR/route.json  # 路由配置的路径，请参考 https://xtls.github.io/config/routing.html 获取帮助
+InboundConfigPath: $Inbound_Config         # 自定义入站配置路径：/etc/XrayR/custom_inbound.json  # 自定义入站配置的路径，请参考 https://xtls.github.io/config/inbound.html 获取帮助
+OutboundConfigPath: $Outbound_Config       # 自定义出站配置路径：/etc/XrayR/custom_outbound.json  # 自定义出站配置的路径，请参考 https://xtls.github.io/config/outbound.html 获取帮助
 ConnectionConfig:
   Handshake: 4                             # 连接建立时的握手时间限制，秒
   ConnIdle: 10                             # 连接空闲的时间限制，秒
@@ -41,8 +70,8 @@ Nodes:
       NodeID: $XRAYR_NODE_ID
       NodeType: $XRAYR_NODE_TYPE           # 节点类型：V2ray, Trojan, Shadowsocks, Shadowsocks-Plugin
       Timeout: 8                           # API请求超时时间
-      EnableVless: false                    # 是否启用Vless（仅适用于V2ray类型）
-      EnableXTLS: false                     # 是否启用XTLS（适用于V2ray和Trojan类型）
+      EnableVless: $EnableVless            # 是否启用Vless（仅适用于V2ray类型）
+      EnableXTLS: $EnableXTLS              # 是否启用XTLS（适用于V2ray和Trojan类型）
       VlessFlow: "xtls-rprx-vision"        # Only support vless
       SpeedLimit: 0                        # 速度限制（Mbps），本地设置将覆盖远程设置，设置为0表示禁用
       DeviceLimit: 0                       # 设备限制，本地设置将覆盖远程设置，设置为0表示禁用
@@ -77,8 +106,8 @@ Nodes:
           Path:                            # HTTP路径，留空表示任意
           Dest: 80                         # 必填，备用服务器的目标，详细信息请参考 https://xtls.github.io/config/fallback/
           ProxyProtocolVer: 0              # 发送的PROXY协议版本，设置为0表示禁用
-      EnableREALITY: false                  # Enable REALITY
-      DisableLocalREALITYConfig: false      # disable local reality config
+      EnableREALITY: $EnableREALITY        # Enable REALITY
+      DisableLocalREALITYConfig: true      # disable local reality config
       REALITYConfigs:
         Show: false                         # Show REALITY debug
       CertConfig:
